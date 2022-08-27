@@ -29,46 +29,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AddProduct from './Addform';
 import Login from '../SignIn/Login';
+import { Service } from '../../config/service';
 
-// Table Data Start
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
-  
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
-  
-  const rows = [
-    createData('Frozen yoghurt', 'Knn1', 'tommy', 'sam', 'shown'),
-    createData('Ice cream sandwich', 'chicken', 'hamza', 'ali', 'asad'),
-    createData('Eclair', 'beef', 'hammad', 'omar', 'azam'),
-    createData('Cupcake', 'beef2', 'asad', 'rafay', 'zeeshan'),
-    createData('Gingerbread', 'nuggits', 'hamza', 'haseeb', 'maaz'),
-    createData('Gingerbread', 'roll', 'talha', 'hunain', 'hamza'),
-    createData('Gingerbread', 'samosa', 'taha', 'saad', 'javed'),
-    createData('Gingerbread', 'knn2', 'muaz', 'maaz', 'taha'),
-    createData('Gingerbread', 'soap', 'hannan', 'bilal', 'oamr'),
-    createData('Gingerbread', 'knn3', 'asad', 'omar', 'hamza'),
-    createData('Gingerbread', 'knn3', 'bilal', 'zeeshan', 'hamza'),
-  ];
-// Table data End
 
 const drawerWidth = 240;
 
@@ -118,10 +80,23 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function Dashboard() {
- 
+  const [manufactureData, setManufactureData] = React.useState([]);
+    console.log(manufactureData)
   React.useEffect(()=>{
-    
+    getData()
   },[])
+
+  const getData = async () =>{
+try {
+  const result= await Service.completeData()
+      
+        setManufactureData(result)
+      
+
+} catch (error) {
+  console.log(error)
+}
+  }
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -230,25 +205,28 @@ export default function Dashboard() {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            {/* <StyledTableCell>Dessert (100g serving)</StyledTableCell> */}
-            <StyledTableCell align="right">Product</StyledTableCell>
-            <StyledTableCell align="right">Manufacture</StyledTableCell>
-            <StyledTableCell align="right">Supplier</StyledTableCell>
-            <StyledTableCell align="right">Distributer</StyledTableCell>
+            
+            <TableCell align="right">Product</TableCell>
+            <TableCell align="right">Manufacture</TableCell>
+            <TableCell align="right">Supplier</TableCell>
+            <TableCell align="right">Distributer</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              {/* <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell> */}
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {manufactureData.map((data,i)=>
+          {
+            return(
+            <TableRow
+            key={i + 1}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          >
+            <TableCell align='right'>{data?.Product_Name}</TableCell>
+            <TableCell align='right'>{data?.manufacturers?.Manufacturer_Name}</TableCell>
+            <TableCell align='right'>{data?.suppliers?.Supplier_Name}</TableCell>
+            <TableCell align='right'>{data?.distributors?.Distributor_Name}</TableCell>
+            </TableRow>
+           )
+         } )}
         </TableBody>
       </Table>
     </TableContainer> 

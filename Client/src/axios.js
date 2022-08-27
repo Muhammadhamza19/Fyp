@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const server = 'https://supplychain60.herokuapp.com/';
+export const server = 'https://supplychain20.herokuapp.com/';
 
 const instance = axios.create({
   baseURL: server,
